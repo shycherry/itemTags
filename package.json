@@ -6,12 +6,14 @@
     "type": "git",
     "url": "https://github.com/shycherry/itemTags.git"
   },
+  "main":"nwIndex.html",  
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "express": ">= 3.2.5",
     "ejs": ">= 0.8.4",
-    "redis": ">= 0.8.3"
+    "nosql": ">= 1.0.2",
+    "uuid": ">=1.4.1"
   }
 }
