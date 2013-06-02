@@ -2,6 +2,10 @@
   "name": "itemTags",
   "version": "0.0.1",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shycherry/itemTags.git"
+  },
   "scripts": {
     "start": "node app.js"
   },
