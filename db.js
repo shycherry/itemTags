@@ -21,18 +21,20 @@
       return uuid == dbItem.uuid
     }
   }
-   
+
    /**
    * exposed API
    */
-  return { 
+  return {
+    
     "configure": _set_options_,
+
     "save": function save (item, callback) {
-      var created = ('undefined' == typeof item.uuid)
-      if( created ){
+      var isCreation = ('undefined' == typeof item.uuid)
+      if( isCreation ){
         item.uuid = uuid.v1()
         nosql.insert(item, function(){
-          callback(undefined, item, created)
+          callback(undefined, item, true)
         })
       }else{
         this.fetchOne(item.uuid, function(err, dbItem){
@@ -46,7 +48,7 @@
                 return dbItem
               },
               function(){
-                callback(undefined, item, created)
+                callback(undefined, item, false)
               }              
             )
           }
@@ -54,27 +56,47 @@
         
       }
     },
-    "fetchOne":  function fetchOne (uuid, callback) {      
-      nosql.count(
-        _uuidFilter_(uuid), 
-        function(count){
-          if(count==0){
-            callback("no item "+uuid+" found !")
-          }else{
-            nosql.one(_uuidFilter_(uuid), function(dbItem){
-              callback(undefined, dbItem)
-            })
-          }
+
+    "fetchByFilter": function fetchByFilter(filter, callback){
+      nosql.one(filter, function(dbItem){
+        if(!dbItem){
+          callback('not found !')
         }
-      )
+        else{
+          callback(undefined, dbItem)
+        }
+      })
     },
-    "fetchAll":  function fetchAll (callback) { callback('Not implemented yet'); },
-    "deleteOne": function deleteOne (uuid, callback) { callback('Not implemented yet'); },
+
+    "fetchOne":  function fetchOne (uuid, callback) {      
+      nosql.one(_uuidFilter_(uuid), function(dbItem){
+        if(!dbItem){
+          callback('not found !')
+        }
+        else{
+          callback(undefined, dbItem)
+        }
+      })
+    },
+
+    "fetchAll":  function fetchAll (callback) {
+      nosql.all(null, function(dbItems){
+        callback(undefined, dbItems)
+      })
+    },
+    
+    "deleteOne": function deleteOne (uuid, callback) {
+      nosql.remove(_uuidFilter_(uuid), function(removedCount){
+        callback(undefined, removedCount)
+      })
+    },
+    
     "deleteAll": function deleteAll (callback) {
       nosql.clear(function(){
-        if(callback) callback()
+        if(callback) callback(undefined, null)
       })
     }
+
   }
  
 };

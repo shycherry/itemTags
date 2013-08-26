@@ -3,12 +3,12 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , http = require('http')
-  , path = require('path');
-require('./response')
+var express = require('express'),
+  routes = require('./routes'),
+  user = require('./routes/user'),
+  http = require('http'),
+  path = require('path');
+require('./response');
 
 var db = exports.db = require('./db')({database:'./itemTagsDB.nosql'});
 var app = express();
@@ -32,6 +32,15 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+app.get('/items', function(req, res){
+  db.fetchAll(function(err, items){
+    res.respond(err||items, err ? 500 : 200)
+  })
+})
+
+app.post('/item', function(req, res){
+  res.send("post !");
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

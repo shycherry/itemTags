@@ -4,9 +4,10 @@
     <title>itemTags Debug</title>    
     <script>
       require('./app.js')
+      var db = require('./db.js')({database:'itemTagsDB'})
     </script>	
 </head>
 <body>
-  itemTags !
+  itemTags ! use 'db' to direct access database
 </body>
 </html>
