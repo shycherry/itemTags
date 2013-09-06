@@ -21,116 +21,141 @@
       return uuid == dbItem.uuid
     }
   }
-
-   /**
-   * exposed API
+  /**
+   * Protected
    */
+  function fetchAll (callback) {
+    nosql.all(null, function(dbItems){
+      callback(undefined, dbItems)
+    })
+  }
+
+  function dumpDb(){
+    fetchAll(function(err, data){
+      console.log(JSON.stringify(data, 2, 2))
+    })
+  }
+
+  function save (item, callback) {
+    var isCreation = ('undefined' == typeof item.uuid)
+    if( isCreation ){
+      item.uuid = uuid.v1()
+      nosql.insert(item, function(){
+        callback(undefined, item, true)
+      })
+    }else{
+      this.fetchOne(item.uuid, function(err, dbItem){
+        if(err){ return callback(err) }
+        if(dbItem){
+          nosql.update(
+            function(dbItem){
+              if(dbItem.uuid == item.uuid){
+                dbItem = item
+              }
+              return dbItem
+            },
+            function(){
+              callback(undefined, item, false)
+            }              
+          )
+        }
+      })
+      
+    }
+  }
+
+  function fetchItemsSharingTags(tagsList, callback){
+    nosql.all(null, function(dbItems){
+      var itemsSharingTags = []
+      for(var itemIdx in dbItems){
+        var itemTags = dbItems[itemIdx].tags
+        if(itemTags){
+          for(var tagIdx in itemTags){
+            if(tagsList.lastIndexOf(itemTags[tagIdx]) != -1){
+              itemsSharingTags.push(dbItems[itemIdx])
+            }
+          }
+        }
+      }
+      callback(undefined, itemsSharingTags)
+    })
+  }
+
+  function fetchAllTags(callback){      
+    nosql.all(null, function(dbItems){
+      var tagsList=[]
+      for(var itemIdx in dbItems){
+        var itemTags = dbItems[itemIdx].tags
+        if(itemTags){
+          for(var tagIdx in itemTags){
+            if(tagsList.lastIndexOf(itemTags[tagIdx]) == -1){
+              tagsList.push(itemTags[tagIdx])
+            }
+          }
+        }
+      }
+      callback(undefined, tagsList)
+    })
+  }
+
+  function fetchOneByFilter(filter, callback){
+    nosql.one(filter, function(dbItem){
+      if(!dbItem){
+        callback('no fetch !')
+      }
+      else{
+        callback(undefined, dbItem)
+      }
+    })
+  }
+
+  function fetchOne (uuid, callback) {      
+    nosql.one(_uuidFilter_(uuid), function(dbItem){
+      if(!dbItem){
+        callback('not found !')
+      }
+      else{
+        callback(undefined, dbItem)
+      }
+    })
+  }
+
+  function deleteOne (uuid, callback) {
+    nosql.remove(_uuidFilter_(uuid), function(removedCount){
+      callback(undefined, removedCount)
+    })
+  }
+  
+  function deleteAll (callback) {
+    nosql.clear(function(){
+      if(callback) callback(undefined, null)
+    })
+  }
+  /**
+  * exposed API
+  */
   return {
     
     "configure": _set_options_,
 
-    "save": function save (item, callback) {
-      var isCreation = ('undefined' == typeof item.uuid)
-      if( isCreation ){
-        item.uuid = uuid.v1()
-        nosql.insert(item, function(){
-          callback(undefined, item, true)
-        })
-      }else{
-        this.fetchOne(item.uuid, function(err, dbItem){
-          if(err){ return callback(err) }
-          if(dbItem){
-            nosql.update(
-              function(dbItem){
-                if(dbItem.uuid == item.uuid){
-                  dbItem = item
-                }
-                return dbItem
-              },
-              function(){
-                callback(undefined, item, false)
-              }              
-            )
-          }
-        })
-        
-      }
-    },
+    "dumpDb" : dumpDb,
 
-    "fetchItemsSharingTags": function fetchItemsSharingTags(tagsList, callback){
-      nosql.all(null, function(dbItems){
-        var itemsSharingTags = []
-        for(var itemIdx in dbItems){
-          var itemTags = dbItems[itemIdx].tags
-          if(itemTags){
-            for(var tagIdx in itemTags){
-              if(tagsList.lastIndexOf(itemTags[tagIdx]) != -1){
-                itemsSharingTags.push(dbItems[itemIdx])
-              }
-            }
-          }
-        }
-        callback(undefined, itemsSharingTags)
-      })
-    },
+    "save": save,
 
-    "fetchAllTags": function fetchAllTags(callback){      
-      nosql.all(null, function(dbItems){
-        var tagsList=[]
-        for(var itemIdx in dbItems){
-          var itemTags = dbItems[itemIdx].tags
-          if(itemTags){
-            for(var tagIdx in itemTags){
-              if(tagsList.lastIndexOf(itemTags[tagIdx]) == -1){
-                tagsList.push(itemTags[tagIdx])
-              }
-            }
-          }
-        }
-        callback(undefined, tagsList)
-      })
-    },
+    "fetchItemsSharingTags": fetchItemsSharingTags,
 
-    "fetchByFilter": function fetchByFilter(filter, callback){
-      nosql.one(filter, function(dbItem){
-        if(!dbItem){
-          callback('not found !')
-        }
-        else{
-          callback(undefined, dbItem)
-        }
-      })
-    },
+    "fetchAllTags": fetchAllTags,
 
-    "fetchOne":  function fetchOne (uuid, callback) {      
-      nosql.one(_uuidFilter_(uuid), function(dbItem){
-        if(!dbItem){
-          callback('not found !')
-        }
-        else{
-          callback(undefined, dbItem)
-        }
-      })
-    },
+    "fetchOneByFilter": fetchOneByFilter,
 
-    "fetchAll":  function fetchAll (callback) {
-      nosql.all(null, function(dbItems){
-        callback(undefined, dbItems)
-      })
-    },
+    "fetchOne":  fetchOne,
+
+    "fetchAll":  fetchAll,
     
-    "deleteOne": function deleteOne (uuid, callback) {
-      nosql.remove(_uuidFilter_(uuid), function(removedCount){
-        callback(undefined, removedCount)
-      })
-    },
+    "deleteOne": deleteOne,
     
-    "deleteAll": function deleteAll (callback) {
-      nosql.clear(function(){
-        if(callback) callback(undefined, null)
-      })
-    }
+    "deleteAll": deleteAll
 
   }
  
-};
+}
