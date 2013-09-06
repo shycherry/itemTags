@@ -57,6 +57,40 @@
       }
     },
 
+    "fetchItemsSharingTags": function fetchItemsSharingTags(tagsList, callback){
+      nosql.all(null, function(dbItems){
+        var itemsSharingTags = []
+        for(var itemIdx in dbItems){
+          var itemTags = dbItems[itemIdx].tags
+          if(itemTags){
+            for(var tagIdx in itemTags){
+              if(tagsList.lastIndexOf(itemTags[tagIdx]) != -1){
+                itemsSharingTags.push(dbItems[itemIdx])
+              }
+            }
+          }
+        }
+        callback(undefined, itemsSharingTags)
+      })
+    },
+
+    "fetchAllTags": function fetchAllTags(callback){      
+      nosql.all(null, function(dbItems){
+        var tagsList=[]
+        for(var itemIdx in dbItems){
+          var itemTags = dbItems[itemIdx].tags
+          if(itemTags){
+            for(var tagIdx in itemTags){
+              if(tagsList.lastIndexOf(itemTags[tagIdx]) == -1){
+                tagsList.push(itemTags[tagIdx])
+              }
+            }
+          }
+        }
+        callback(undefined, tagsList)
+      })
+    },
+
     "fetchByFilter": function fetchByFilter(filter, callback){
       nosql.one(filter, function(dbItem){
         if(!dbItem){
