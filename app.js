@@ -10,7 +10,7 @@ var express = require('express'),
   path = require('path');
 require('./response');
 
-var db = exports.db = require('./db')({database:'./itemTagsDB.nosql'});
+var db = exports.db = require('itemTagsDB')({database:'./itemTags.nosql'});
 var app = express();
 
 // all environments
