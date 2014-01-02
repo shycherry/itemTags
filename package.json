@@ -6,14 +6,16 @@
     "type": "git",
     "url": "https://github.com/shycherry/itemTags.git"
   },
+  "chromium-args": "--ignore-certificate-errors",
   "main":"nwIndex.html",  
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
+    "websocket":">= 1.0.8",
     "express": ">= 3.2.5",
     "ejs": ">= 0.8.4",
     "async": ">=0.2.9",
     "itemTagsDB": "git://github.com/shycherry/itemTagsDB.git#master"
-  }
+  }  
 }
