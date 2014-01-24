@@ -16,6 +16,7 @@ var credentials = {
   cert: fs.readFileSync('./shycherry.fr.cert')
 };
 
+var wsClients = [];
 var db = exports.db = require('itemTagsDB')({database:'./itemTags.nosql'});
 var app = express();
 
@@ -59,4 +60,27 @@ var wsServer = new WebSocketServer({
 
 wsServer.on('request', function(request){
   console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
+
+  var connexion = request.accept(null, request.origin);
+  var clientIdx = wsClients.push(connexion) - 1;
+
+  console.log((new Date()) + ' Connexion accepted.');
+
+  connexion.on('message', function(message){
+    console.log(JSON.stringify(message));
+    
+    for(var idx = 0; idx < wsClients.length; idx++){
+      wsClients[idx].sendUTF(JSON.stringify({
+        type: 'message',
+        data: message.utf8Data
+      }));
+    }
+    
+  });
+
+  connexion.on('close', function(connexion){
+    console.log((new Date())+' Peer '+connexion.remoteAddress + ' disconnected.');
+    wsClients.splice(clientIdx, 1);
+  });
+
 });
