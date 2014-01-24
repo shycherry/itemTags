@@ -3,6 +3,19 @@
  * GET home page.
  */
 
+var db = require('itemTagsDB')({database:'itemTags'});
+var watcher = require('itemTagsWatcher')({configDB:'testConfigDB'});
+var watcherReady = null;
+
+watcher.on('ready', function(){
+  watcherReady = watcher;
+});
+
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  watcherReady.doWatch(function(){
+    watcherReady.getDB().fetchAll(function(err, items){
+      res.render('index', { title: 'ItemsDB', items: items});
+    });
+  });
+  
 };

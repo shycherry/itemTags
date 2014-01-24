@@ -7,5 +7,10 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <ul>
+	    <% for(var idx in items){ %>
+	    	<li><%= items[idx].uuid+' '+items[idx].name %></li>
+	    <% } %>
+	</ul>
   </body>
 </html>
