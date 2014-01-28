@@ -30,6 +30,8 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.cookieParser());
+app.use(express.session({secret: 'f82f07c0-854b-11e3-b7dd-6f7dbce5dff6'}));
 
 // development only
 if ('development' == app.get('env')) {
