@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/js/controller.js"></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <p>Last page was <%= lastPage %></p>
+    <ul>
+	    <% for(var idx in items){ %>
+	    	<li><%= items[idx].uuid+' '+items[idx].uri %></li>
+	    <% } %>
+	</ul>
+  </body>
+</html>
