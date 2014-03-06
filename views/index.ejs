@@ -11,7 +11,7 @@
     <p>Last page was <%= lastPage %></p>
     <ul>
 	    <% for(var idx in items){ %>
-	    	<li><%= items[idx].uuid+' '+items[idx].uri %></li>
+	    	<li><a href="<%= items[idx].uri %>"><%= items[idx].uuid %></a></li>
 	    <% } %>
 	</ul>
   </body>
