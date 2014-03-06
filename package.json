@@ -16,7 +16,7 @@
     "express": ">= 3.2.5",
     "ejs": ">= 0.8.4",
     "async": ">=0.2.9",
-    "itemTagsDB": "git://github.com/shycherry/itemTagsDB.git#master",
-    "itemTagsWatcher": "git://github.com/shycherry/itemTagsWatcher.git#master"
+    "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",
+    "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master"
   }  
 }
