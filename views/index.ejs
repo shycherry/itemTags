@@ -9,10 +9,10 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
     <p>Last page was <%= lastPage %></p>
-    <ul>
-	    <% for(var idx in items){ %>
-	    	<li><a href="<%= items[idx].uri %>"><%= items[idx].uuid %></a></li>
-	    <% } %>
-	</ul>
+    
+    <% for(var idx in items){ %>
+      <a href="<%= items[idx].uri %>"><div title="<%= items[idx].uuid %>"><%= items[idx].name %></div></a>
+    <% } %>
+	
   </body>
 </html>
