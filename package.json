@@ -17,6 +17,7 @@
     "ejs": ">= 0.8.4",
     "async": ">=0.2.9",
     "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",
-    "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master"
+    "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master",
+    "uuid": ">=1.4.1"
   }  
 }

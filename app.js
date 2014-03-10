@@ -96,8 +96,8 @@ wsServer.on('request', function(request){
     
   });
 
-  connexion.on('close', function(connexion){
-    console.log((new Date())+' Peer '+connexion.remoteAddress + ' disconnected.');
+  connexion.on('close', function(reasonCode, description){
+    console.log((new Date())+' Peer '+connexion.remoteAddress + ' disconnected. rc:'+reasonCode+', description:'+description);
     wsClients.splice(clientIdx, 1);
   });
 
