@@ -1,14 +1,6 @@
 
-var itemsDB = require('itemTagsDB')({database:'itemTags'});
 var usersDB = require('itemTagsDB')({database:'usersDB'});
-var watcher = require('itemTagsWatcher')({configDB:'testConfigDB'});
-var watcherReady = null;
 var sessionsUsersMap = {};
-
-watcher.on('ready', function(){
-  watcherReady = watcher;
-});
-
 
 var hashString = function(iString){
   var Crypto = require('crypto');
@@ -33,12 +25,15 @@ exports.index = function(req, res){
     res.redirect('/login');
   }else{
     console.log('in session users... continue !');
-    watcherReady.doWatch(function(){
-      watcherReady.getDB().fetchAll(function(err, items){
-        res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage,  items: items});
+    var userWatcher = require('itemTagsWatcher')({configDB: sessionUser.watcherConfigDB});
+    
+    userWatcher.on('ready', function(){
+      userWatcher.doWatch(function(){
+        userWatcher.getDB().fetchAll(function(err, items){
+          res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage,  items: items});
+        });
       });
     });
-
   }
 
 };
