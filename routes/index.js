@@ -25,19 +25,10 @@ exports.index = function(req, res){
     res.redirect('/login');
   }else{
     console.log('in session users... continue !');
-    var userWatcher = require('itemTagsWatcher')({configDB: sessionUser.watcherConfigDB});
-    
-    userWatcher.on('ready', function(){
-      userWatcher.doWatch(function(){
-        userWatcher.getDB().fetchAll(function(err, items){
-          res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage,  items: items});
-        });
-      });
-    });
+    res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage});
   }
 
 };
-
 
 /*
  * GET login page.
@@ -77,4 +68,31 @@ exports.POSTlogin = function(req, res){
     }
   });
   
+};
+
+/*
+ * GET items
+ */
+
+exports.GETitems = function(req, res){
+  
+  var sid = req.session.sid;
+  var sessionUser = sessionsUsersMap[sid];
+
+  if(!sessionUser){
+
+    res.repond('login required', 401);
+
+  }else{
+    console.log('in session users... continue !');
+    var userWatcher = require('itemTagsWatcher')({configDB: sessionUser.watcherConfigDB});
+    
+    userWatcher.on('ready', function(){
+      userWatcher.doWatch(function(){
+        userWatcher.getDB().fetchAll(function(err, items){
+          res.respond(err||items, err ? 500 : 200);
+        });
+      });
+    });
+  }
 };

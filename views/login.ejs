@@ -3,15 +3,13 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="platform/platform.js"></script>
     <script type="text/javascript" src="/js/controller.js"></script>
+    <link rel='import' href='elements/it-login.html' />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Login to <%= title %></p>    
-    <form action="/login" method="post">
-      <input type="text" name="login"/>
-      <input type="password" name="password"/>
-      <input type="submit" value="login"/>
-    </form>
+    <it-login></it-login>
   </body>
 </html>

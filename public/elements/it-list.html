@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer-ajax/polymer-ajax.html">
+
+<polymer-element name="it-list" attributes="databaseUrl">
+  <template>
+    <!-- <polymer-ajax url="{{databaseUrl+'login'}}" auto 
+      method="POST"
+      contentType="application/json"
+      body='{"login":"totof", "password":"gitan"}'
+      on-polymer-response='{{ handleResponse }}'>
+    <polymer-ajax> -->
+    <polymer-ajax id="ajax" url="{{databaseUrl+'items'}}" auto 
+      method="GET"
+      handleAs="json"
+      on-polymer-error='{{ handleError }}'
+      on-polymer-response='{{ handleResponse }}'>
+    </polymer-ajax>
+    <template repeat="{{ item in items }}">
+      <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
+    </template>
+  </template>
+  <script>
+    Polymer('it-list',{
+      databaseUrl : '',
+      items: [],
+      handleError: function(iEvent, iData){
+        console.log('ooops ! that\'s an error !');
+      },
+      handleResponse: function(iEvent, iData){
+        this.items = iData.response;
+      }
+    });
+  </script>
+</polymer-element>

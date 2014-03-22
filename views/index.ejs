@@ -2,17 +2,19 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />    
+    <script src="platform/platform.js"></script>
     <script type="text/javascript" src="/js/controller.js"></script>
+    <link rel="import" href="elements/color-picker.html" />
+    <link rel="import" href="elements/it-list.html" />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %>, <%= username %></p>
     <p>Last page was <%= lastPage %></p>
-    
-    <% for(var idx in items){ %>
-      <a href="<%= items[idx].uri %>"><div title="<%= items[idx].uuid %>"><%= items[idx].name %></div></a>
-    <% } %>
-	
+
+    <color-picker></color-picker>
+    <it-list databaseUrl="/"></it-list>
+
   </body>
 </html>

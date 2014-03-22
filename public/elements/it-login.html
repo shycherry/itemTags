@@ -1,0 +1,15 @@
+<link rel="import" href="../polymer/polymer.html">
+<polymer-element name="it-login" attributes="url">
+  <template>
+    <form action="{{url}}" method="post">
+      <input type="text" name="login"/>
+      <input type="password" name="password"/>
+      <input type="submit" value="login"/>
+    </form>
+  </template>
+  <script>
+    Polymer('it-login',{
+      url: '/login'
+    });
+  </script>
+</polymer-element>

@@ -30,6 +30,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 //app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.cookieParser());
 app.use(express.session({
   secret: 'f82f07c0-854b-11e3-b7dd-6f7dbce5dff6',
@@ -41,31 +42,12 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
 app.post('/login', routes.POSTlogin);
+app.get('/items', routes.GETitems);
 
-app.get('/', routes.index);
 app.get('/users', user.list);
-
-app.get('/items', function(req, res){
-  db.fetchAll(function(err, items){
-    res.respond(err||items, err ? 500 : 200);
-  });
-});
-app.post('/item', function(req, res){
-  console.log(req);
-  res.send("post !");
-});
-
-app.get('/awesome', function(req, res) {
-  if(req.session.lastPage) {     
-     res.send('Last page was: ' + req.session.lastPage + '. \n'+'Your Awesome.');
-     console.log('yo');
-   }else{
-    res.send('Your Awesome.'); 
-   }
-   req.session.lastPage = '/awesome';      
-});
 
 var httpsServer = https.createServer(credentials, app);
 httpsServer.listen(app.get('port'), function(){
