@@ -1,33 +1,32 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../polymer-ajax/polymer-ajax.html">
+<link rel="import" href="it-async-container.html">
 
 <polymer-element name="it-list" attributes="databaseUrl">
   <template>
-    <!-- <polymer-ajax url="{{databaseUrl+'login'}}" auto 
-      method="POST"
-      contentType="application/json"
-      body='{"login":"totof", "password":"gitan"}'
-      on-polymer-response='{{ handleResponse }}'>
-    <polymer-ajax> -->
-    <polymer-ajax id="ajax" url="{{databaseUrl+'items'}}" auto 
-      method="GET"
-      handleAs="json"
-      on-polymer-error='{{ handleError }}'
-      on-polymer-response='{{ handleResponse }}'>
-    </polymer-ajax>
-    <template repeat="{{ item in items }}">
-      <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
-    </template>
+    <it-async-container 
+      getUrl="{{ databaseUrl+'items' }}"
+      on-error="{{ handleError }}"
+      on-response="{{ handleResponse }}">
+      
+      <template repeat="{{ item in items }}">
+        <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
+      </template>
+    
+    </it-async-container>
   </template>
+
   <script>
     Polymer('it-list',{
       databaseUrl : '',
       items: [],
-      handleError: function(iEvent, iData){
+      error: null,
+      handleError: function(iEvent, iError){
         console.log('ooops ! that\'s an error !');
+        error = iError;
       },
-      handleResponse: function(iEvent, iData){
-        this.items = iData.response;
+      handleResponse: function(iEvent, iResponse){
+        console.log(JSON.stringify(iResponse));
+        this.items = iResponse;
       }
     });
   </script>

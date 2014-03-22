@@ -81,7 +81,7 @@ exports.GETitems = function(req, res){
 
   if(!sessionUser){
 
-    res.repond('login required', 401);
+    res.respond('login required', 401);
 
   }else{
     console.log('in session users... continue !');
