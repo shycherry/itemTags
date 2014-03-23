@@ -12,12 +12,12 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "websocket":">= 1.0.8",
-    "express": ">= 3.2.5",
-    "ejs": ">= 0.8.4",
-    "async": ">=0.2.9",
+    "websocket":"latest",
+    "express": "latest",
+    "ejs": "latest",
+    "async": "latest",
     "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",
     "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master",
-    "uuid": ">=1.4.1"
+    "uuid": "latest"
   }  
 }

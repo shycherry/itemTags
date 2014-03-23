@@ -7,14 +7,17 @@
     <script type="text/javascript" src="/js/controller.js"></script>
     <link rel="import" href="elements/color-picker.html" />
     <link rel="import" href="elements/it-list.html" />
+    <link rel="import" href="elements/itdb-element.html" />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %>, <%= username %></p>
     <p>Last page was <%= lastPage %></p>
 
+    <itdb-element id="db" databaseUrl="/"></itdb-element>
     <color-picker width="50"></color-picker>
-    <it-list databaseUrl="/"></it-list>
+    <it-list databaseId="db"></it-list>
+    
 
   </body>
 </html>

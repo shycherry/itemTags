@@ -1,32 +1,28 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="it-async-container.html">
+<link rel="import" href="itdb-element.html" />
 
-<polymer-element name="it-list" attributes="databaseUrl">
-  <template>
-    <it-async-container 
-      getUrl="{{ databaseUrl+'items' }}"
-      on-error="{{ handleError }}"
-      on-response="{{ handleResponse }}">
-      
-      <template repeat="{{ item in items }}">
-        <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
-      </template>
-    
-    </it-async-container>
+<polymer-element name="it-list" attributes="databaseId">
+  <template>    
+    <template repeat="{{ item in items }}">
+      <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
+    </template>
   </template>
 
   <script>
     Polymer('it-list',{
-      databaseUrl : '',
+      databaseId : '',
       items: [],
       error: null,
-      handleError: function(iEvent, iError){
-        console.log('ooops ! that\'s an error !');
-        error = iError;
-      },
-      handleResponse: function(iEvent, iResponse){
-        console.log(JSON.stringify(iResponse));
-        this.items = iResponse;
+      ready: function(){
+        var self = this;
+        var db = document.querySelector('#'+this.databaseId);
+        db.fetchAll(function(err, items){
+          if(err){
+            self.error = err;
+          }else{
+            self.items = items;
+          }
+        });
       }
     });
   </script>

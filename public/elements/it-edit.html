@@ -1,0 +1,35 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer-ajax/polymer-ajax.html">
+
+<polymer-element name="it-edit" attributes="databaseUrl uuid ">
+  <template>
+    <polymer-ajax id="postAjax" url="{{ databaseUrl+'item' }}" 
+      method="POST"
+      contentType="application/json"
+      body="{{ localItem }}"
+      handleAs="json"
+      on-polymer-error='{{ handleError }}'
+      on-polymer-response='{{ handleResponse }}'>
+    </polymer-ajax>
+  </template>
+  <template if="{{ error }}">
+    <div id="errorDiv">{{ error }}</div>
+  </template>
+  
+  <script>
+    Polymer('it-edit',{
+      dbItem: null,
+      localItem: null,
+      this.error: null,
+      handleError: function(iEvent, iData){
+        this.error = iData;
+      },
+      handleResponse: function(iEvent, iData){
+        console.log(iData.response);
+      },
+      commit: function(){
+        this.$.postAjax.go();
+      }
+    });
+  </script>
+</polymer-element>

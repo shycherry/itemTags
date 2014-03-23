@@ -1,0 +1,65 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer-ajax/polymer-ajax.html">
+
+<polymer-element name="itdb-element" attributes="databaseUrl">
+  <template>
+    <polymer-ajax id="postAjax" method="POST" contentType="application/json" handleAs="json">
+    </polymer-ajax>
+    
+    <polymer-ajax id="getAjax" method="GET" handleAs="json">
+    </polymer-ajax>
+  </template>
+  
+  <script>
+    Polymer('itdb-element',{
+      databaseUrl: '/',
+      configure: function(){
+        
+      },
+      dumpDb: function(){
+
+      },
+      save: function(){
+
+      },
+      fetchItemsSharingTags: function(){
+
+      },
+      fetchAllTags: function(){
+
+      },
+      fetchOneByFilter: function(){
+
+      },
+      fetchOne: function(){
+
+      },
+      fetchAll: function(iCallback){
+        var myGetAjax = this.$.getAjax.cloneNode();
+        myGetAjax.url = this.databaseUrl+'items';
+
+        myGetAjax.addEventListener('polymer-response', function(e){
+          iCallback(null, e.detail.response);
+        });
+        myGetAjax.addEventListener('polymer-error', function(e){
+          iCallback(e.detail.response, null);
+        });
+
+        myGetAjax.go();
+      },      
+      deleteOne: function(){
+
+      },      
+      deleteAll: function(){
+
+      },
+      handleError: function(iEvent, iData){
+        this.error = iData;
+      },
+      handleResponse: function(iEvent, iData){
+        console.log(iData.response);
+      }
+      
+    });
+  </script>
+</polymer-element>
