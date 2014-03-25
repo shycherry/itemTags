@@ -1,0 +1,16 @@
+<link rel="import" href="../polymer/polymer.html">
+<polymer-element name="it-loading" attributes="loading">
+  <template>
+    <template if="{{ loading }}">
+      ...
+    </template>
+    <template if="{{ !loading }}">
+      <content></content>
+    </template>
+  </template>
+  <script>
+    Polymer('it-loading',{      
+      loading: false
+    });
+  </script>
+</polymer-element>

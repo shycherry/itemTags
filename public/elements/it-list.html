@@ -1,8 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="itdb-element.html" />
+<link rel="import" href="it-loading.html" />
 
 <polymer-element name="it-list" attributes="databaseId">
-  <template>    
+  <template>
+    <it-loading >Loaded !</it-loading>
     <template repeat="{{ item in items }}">
       <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
     </template>
