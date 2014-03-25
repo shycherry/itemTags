@@ -3,10 +3,11 @@
 
 <polymer-element name="it-list" attributes="databaseId">
   <template>
-    <it-loading >Loaded !</it-loading>
-    <template repeat="{{ item in items }}">
-      <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
-    </template>
+    <it-loading loading?="{{!items.length}}">
+      <template repeat="{{ item in items }}">
+        <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
+      </template>
+    </it-loading>
   </template>
 
   <script>
