@@ -88,10 +88,15 @@ exports.GETitems = function(req, res){
     var userWatcher = require('itemTagsWatcher')({configDB: sessionUser.watcherConfigDB});
     
     userWatcher.on('ready', function(){
-      userWatcher.doWatch(function(){
-        userWatcher.getDB().fetchAll(function(err, items){
-          res.respond(err||items, err ? 500 : 200);
-        });
+      userWatcher.doWatch(function(err){
+        if(err){
+          res.respond(err, 500);
+        }else{
+          userWatcher.getDB().fetchAll(function(err, items){
+            res.respond(err||items, err ? 500 : 200);
+          });
+        }
+        
       });
     });
   }
