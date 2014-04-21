@@ -14,6 +14,12 @@
   "dependencies": {
     "websocket":"latest",
     "express": "latest",
+    "static-favicon": "latest",
+    "morgan" : "latest",
+    "body-parser": "latest",
+    "method-override": "latest",
+    "cookie-parser": "latest",
+    "express-session": "latest",
     "ejs": "latest",
     "async": "latest",
     "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",

@@ -4,6 +4,12 @@
  */
 var WebSocketServer = require('websocket').server;
 var express = require('express'),
+  favicon = require('static-favicon'),
+  logger = require('morgan'),
+  bodyParser = require('body-parser'),
+  methodOverride = require('method-override'),
+  cookieParser = require('cookie-parser'),
+  expressSession = require('express-session'),
   routes = require('./routes'),
   user = require('./routes/user'),
   https = require('https'),
@@ -24,23 +30,18 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
+app.use(favicon());
+app.use(logger('dev'));
+app.use(bodyParser());
+app.use(methodOverride());
 //app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
-app.use(express.cookieParser());
-app.use(express.session({
+app.use(cookieParser());
+app.use(expressSession({
   secret: 'f82f07c0-854b-11e3-b7dd-6f7dbce5dff6',
-  store: express.session.MemoryStore({reapInterval : 60000*10})
+  store: expressSession.MemoryStore({reapInterval : 60000*10})
 }));
-
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
 
 app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
