@@ -4,19 +4,19 @@ Web Frontend that help users to manage their itemsDBs.
 
 
 conventions : 
-  tags prefixed by '_' shouldn't be displayed to user
-  items not tagged by '_showable' shouldn't be displayed to user
+  tags postfixed by '_' shouldn't be displayed to user
+  items not tagged by '@showable_' shouldn't be displayed to user
 
 Example: Breaking Bad Saison 3 Episode 10
 
 {
   "uuid" : "uuid_item_1",
-  "_file" : "uuid_file_1",
-  "_showable" : "",
-  "Video" : "",
-  "Serie" : "",
-  "Breaking Bad" : "",
-  "Saison 3" : "",
+  "@file_" : "uuid_file_1",
+  "@showable_" : "",
+  "@Video" : "",
+  "@Serie" : "",
+  "@Breaking Bad" : "",
+  "@Saison 3" : "",
 }
 // tags for item#uuid_item_1 : ['_file', 'Video', 'Serie', 'Breaking Bad', 'Saison 3']
 // tags displayed for item#uuid_item_1 : ['Video', 'Serie', 'Breaking Bad', 'Saison 3']

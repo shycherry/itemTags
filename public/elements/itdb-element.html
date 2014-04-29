@@ -28,6 +28,9 @@
       fetchAllTags: function(){
 
       },
+      fetchAllByFilter: function(){
+
+      },
       fetchOneByFilter: function(){
 
       },
@@ -36,7 +39,7 @@
       },
       fetchAll: function(iCallback){
         var myGetAjax = this.$.getAjax.cloneNode();
-        myGetAjax.url = this.databaseUrl+'items';
+        myGetAjax.url = this.databaseUrl+'fetch_all';
 
         myGetAjax.addEventListener('polymer-response', function(e){
           iCallback(null, e.detail.response);

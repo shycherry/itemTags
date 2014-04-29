@@ -9,6 +9,20 @@ var hashString = function(iString){
   return hash.digest('hex');
 };
 
+var getCheckedUserSession = function(req, res){
+  var sid = req.session.sid;
+  var sessionUser = sessionsUsersMap[sid];
+
+  if(!sessionUser){
+    res.redirect('/login');
+    //res.respond('login required', 401);
+    return null;
+  }
+
+  console.log('in session users... continue !');
+  return sessionUser;
+}
+
 /*
  * GET home page.
  */
@@ -17,16 +31,10 @@ exports.index = function(req, res){
   var lastPage = req.session.lastPage;
   req.session.lastPage = '/';
 
-  var sid = req.session.sid;
-  var sessionUser = sessionsUsersMap[sid];
-  
-  if(!sessionUser){
-    console.log('not in session users, redirect to login');
-    res.redirect('/login');
-  }else{
-    console.log('in session users... continue !');
-    res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage});
-  }
+  var sessionUser = getCheckedUserSession(req, res);  
+  if(!sessionUser) return;
+    
+  res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage});
 
 };
 
@@ -73,20 +81,13 @@ exports.POSTlogin = function(req, res){
 };
 
 /*
- * GET items
+ * GET fetchAll
  */
 
-exports.GETitems = function(req, res){
+exports.GET_fetch_all = function(req, res){
   
-  var sid = req.session.sid;
-  var sessionUser = sessionsUsersMap[sid];
-
-  if(!sessionUser){
-    res.respond('login required', 401);
-    return;
-  }
-  
-  console.log('in session users... continue !');
+  var sessionUser = getCheckedUserSession(req, res);
+  if(!sessionUser) return;
   
   var configDB = sessionUser.getTagValue('user')['watcherConfigDB'];
   if(!configDB){
@@ -112,5 +113,12 @@ exports.GETitems = function(req, res){
     });
   });
 
+  
+};
+
+exports.GET_fetch_all_by_filter = function(req, res){
+  
+  var sessionUser = getCheckedUserSession(req, res);
+  if(!sessionUser) return;
   
 };

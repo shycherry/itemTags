@@ -46,7 +46,7 @@ app.use(expressSession({
 app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
 app.post('/login', routes.POSTlogin);
-app.get('/items', routes.GETitems);
+app.get('/fetch_all', routes.GET_fetch_all);
 
 app.get('/users', user.list);
 
