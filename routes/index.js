@@ -50,16 +50,18 @@ exports.POSTlogin = function(req, res){
   var hashedPasswd = hashString(password);
 
   var _userFilter = function(iName, iPassword){
-    return function(itemAsUser){
-      return (itemAsUser.name == iName ) && (itemAsUser.mdp == iPassword);
-    };
+    return JSON.stringify({
+      "@user" : {
+        "name" : iName,
+        "mdp" : iPassword
+      }
+    });
   };
   
   usersDB.fetchOneByFilter(_userFilter(login, hashedPasswd), function(err, user){
     if(err){
       res.render('login', { title: 'Error'});
     }else{
-      //res.render('login', { title: 'Hey '+user.name});
       var UUID = require('uuid');
       var sid = UUID.v1();
       sessionsUsersMap[sid] = user;
@@ -80,25 +82,35 @@ exports.GETitems = function(req, res){
   var sessionUser = sessionsUsersMap[sid];
 
   if(!sessionUser){
-
     res.respond('login required', 401);
-
-  }else{
-    console.log('in session users... continue !');
-    var userWatcher = require('itemTagsWatcher')({configDB: sessionUser.watcherConfigDB});
-    
-    userWatcher.on('ready', function(){
-      userWatcher.doWatch(function(err){
-        if(err){
-          res.respond(err, 500);
-        }else{
-          userWatcher.getDB().fetchAll(function(err, items){
-            res.respond(err||items, err ? 500 : 200);
-          });
-        }
-        
-      });
-    });
+    return;
   }
+  
+  console.log('in session users... continue !');
+  
+  var configDB = sessionUser.getTagValue('user')['watcherConfigDB'];
+  if(!configDB){
+    res.respond('bad watcherConfigDB', 500);
+    return;
+  }
+
+  var userWatcher = require('itemTagsWatcher')({configDB: configDB});
+  if(!userWatcher){
+    res.respond('can\'t retrieve userWatcher', 500);
+  }
+
+  userWatcher.on('ready', function(){
+    userWatcher.doWatch(function(err){
+      if(err){
+        res.respond(err, 500);
+      }else{
+        userWatcher.getDB().fetchAll(function(err, items){
+          res.respond(err||items, err ? 500 : 200);
+        });
+      }
+      
+    });
+  });
+
   
 };

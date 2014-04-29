@@ -5,7 +5,7 @@
   <template>
     <it-loading loading?="{{!items.length}}">
       <template repeat="{{ item in items }}">
-        <a href="{{ item.uri }}"><div title="{{ item.uuid }}">{{ item.name }}</div></a>
+        <a href="{{ item['@file'].uri }}"><div title="{{ item.uuid }}">{{ item['@file'].uri }}</div></a>
       </template>
     </it-loading>
   </template>
