@@ -2,27 +2,28 @@
 
 Web Frontend that help users to manage their itemsDBs.
 
+Example:
 
-conventions : 
-  tags postfixed by '_' shouldn't be displayed to user
-  items not tagged by '@showable_' shouldn't be displayed to user
-
-Example: Breaking Bad Saison 3 Episode 10
+{
+  "uuid_conf_1",
+  "@hidden" : "",
+  "@viewConfig" : {
+    "hiddenTags" : ["viewConfig", "hidden" ,"file"],
+    "hiddenItems" : ["hidden"]
+  }
+}
+// item##uuid_conf_1 won't be showed
 
 {
   "uuid" : "uuid_item_1",
-  "@file_" : "uuid_file_1",
-  "@showable_" : "",
+  "@file" : {
+    "uri" : "ftp://user:mdp@host/Videos/Series/Breaking Bad/Saison 3/Breaking.Bad.S03E10.Fly.DVDRip.XviD-aAF.avi"
+  }
   "@Video" : "",
   "@Serie" : "",
   "@Breaking Bad" : "",
   "@Saison 3" : "",
 }
-// tags for item#uuid_item_1 : ['_file', 'Video', 'Serie', 'Breaking Bad', 'Saison 3']
-// tags displayed for item#uuid_item_1 : ['Video', 'Serie', 'Breaking Bad', 'Saison 3']
 
-{
-  "uuid" : "uuid_file_1",
-  "_uri" : "ftp://user:mdp@host/Videos/Series/Breaking Bad/Saison 3/Breaking.Bad.S03E10.Fly.DVDRip.XviD-aAF.avi",
-}
-// tags for item#uuid_file_1 : ['_uri']
+// tags for item#uuid_item_1 : ['file', 'Video', 'Serie', 'Breaking Bad', 'Saison 3']
+// tags displayed for item#uuid_item_1 : ['Video', 'Serie', 'Breaking Bad', 'Saison 3']
