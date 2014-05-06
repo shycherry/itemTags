@@ -46,7 +46,8 @@ app.use(expressSession({
 app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
 app.post('/login', routes.POSTlogin);
-app.get('/fetch_all', routes.GET_fetch_all);
+app.get('/fetch_all', routes.GET_fetch_all); //todo rename
+app.get('/do_diff', routes.GET_do_diff);
 
 app.get('/users', user.list);
 

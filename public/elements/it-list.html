@@ -1,7 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="it-loading.html" />
 
-<polymer-element name="it-list" attributes="databaseId">
+<polymer-element name="it-list" attributes="databaseId method">
   <template>
     <it-loading loading?="{{!items.length}}">
       <template repeat="{{ item in items }}">
@@ -13,18 +13,43 @@
   <script>
     Polymer('it-list',{
       databaseId : '',
+      method : 'fetchAll',
       items: [],
       error: null,
       ready: function(){
         var self = this;
         var db = document.querySelector('#'+this.databaseId);
-        db.fetchAll(function(err, items){
-          if(err){
-            self.error = err;
-          }else{
-            self.items = items;
-          }
-        });
+
+        switch(this.method){
+          case 'fetchAll' :
+            db.fetchAll(function(err, items){
+              if(err){
+                self.error = err;
+              }else{
+                self.items = items;
+              }
+            });
+          break;
+          case 'removedItems' :
+            db.doDiff(function(err, diffReport){
+              if(err){
+                self.error = err;
+              }else{
+                self.items = diffReport['removedItems'];
+              }
+            });
+          break;
+          case 'addedItems' :
+            db.doDiff(function(err, diffReport){
+              if(err){
+                self.error = err;
+              }else{
+                self.items = diffReport['addedItems'];
+              }
+            });
+          break;
+        }
+        
       }
     });
   </script>

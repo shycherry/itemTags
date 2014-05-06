@@ -9,7 +9,7 @@ var hashString = function(iString){
   return hash.digest('hex');
 };
 
-var getCheckedUserSession = function(req, res){
+var getCheckedSessionUser = function(req, res){
   var sid = req.session.sid;
   var sessionUser = sessionsUsersMap[sid];
 
@@ -23,6 +23,28 @@ var getCheckedUserSession = function(req, res){
   return sessionUser;
 }
 
+var getCheckedSessionUserWatcher = function(req, res){
+  var sessionUser = getCheckedSessionUser(req, res);
+  if(!sessionUser) return null;
+
+  if(!sessionUser.watcher){
+    var configDB = sessionUser.getTagValue('user')['watcherConfigDB'];
+    if(!configDB){
+      res.respond('bad watcherConfigDB', 500);
+      return null;
+    }
+
+    var userWatcher = require('itemTagsWatcher')({configDB: configDB});
+    if(!userWatcher){
+      res.respond('can\'t retrieve userWatcher', 500);
+      return null;
+    }    
+    sessionUser.watcher = userWatcher;
+  }
+
+  return sessionUser.watcher;
+}
+
 /*
  * GET home page.
  */
@@ -31,7 +53,7 @@ exports.index = function(req, res){
   var lastPage = req.session.lastPage;
   req.session.lastPage = '/';
 
-  var sessionUser = getCheckedUserSession(req, res);  
+  var sessionUser = getCheckedSessionUser(req, res);  
   if(!sessionUser) return;
     
   res.render('index', { title: 'ItemsDB', username: sessionUser.name,  lastPage : lastPage});
@@ -85,20 +107,8 @@ exports.POSTlogin = function(req, res){
  */
 
 exports.GET_fetch_all = function(req, res){
-  
-  var sessionUser = getCheckedUserSession(req, res);
-  if(!sessionUser) return;
-  
-  var configDB = sessionUser.getTagValue('user')['watcherConfigDB'];
-  if(!configDB){
-    res.respond('bad watcherConfigDB', 500);
-    return;
-  }
-
-  var userWatcher = require('itemTagsWatcher')({configDB: configDB});
-  if(!userWatcher){
-    res.respond('can\'t retrieve userWatcher', 500);
-  }
+  var userWatcher = getCheckedSessionUserWatcher(req, res);
+  if(!userWatcher) return;
 
   userWatcher.on('ready', function(){
     userWatcher.doWatch(function(err){
@@ -113,12 +123,20 @@ exports.GET_fetch_all = function(req, res){
     });
   });
 
-  
 };
 
-exports.GET_fetch_all_by_filter = function(req, res){
-  
-  var sessionUser = getCheckedUserSession(req, res);
-  if(!sessionUser) return;
-  
+exports.GET_do_diff = function(req, res){
+  var userWatcher = getCheckedSessionUserWatcher(req, res);
+  if(!userWatcher) return;
+
+  userWatcher.on('ready', function(){
+    userWatcher.doDiff(function(err, diffReport){
+      if(err){
+        res.respond(err, 500);
+      }else{
+        res.respond(diffReport, 200);
+      }
+    });
+  });
+
 };

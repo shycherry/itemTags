@@ -56,6 +56,26 @@
       deleteAll: function(){
 
       },
+      cloneDb: function(){
+
+      },
+      diffDb: function(){
+
+      },
+      //todo to move
+      doDiff: function(iCallback){
+        var myGetAjax = this.$.getAjax.cloneNode();
+        myGetAjax.url = this.databaseUrl+'do_diff';
+
+        myGetAjax.addEventListener('polymer-response', function(e){
+          iCallback(null, e.detail.response);
+        });
+        myGetAjax.addEventListener('polymer-error', function(e){
+          iCallback(e.detail.response, null);
+        });
+
+        myGetAjax.go();
+      },
       handleError: function(iEvent, iData){
         this.error = iData;
       },
