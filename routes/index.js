@@ -110,33 +110,26 @@ exports.GET_fetch_all = function(req, res){
   var userWatcher = getCheckedSessionUserWatcher(req, res);
   if(!userWatcher) return;
 
-  userWatcher.on('ready', function(){
-    userWatcher.doWatch(function(err){
-      if(err){
-        res.respond(err, 500);
-      }else{
-        userWatcher.getDB().fetchAll(function(err, items){
-          res.respond(err||items, err ? 500 : 200);
-        });
-      }
-      
-    });
+  userWatcher.doWatch(function(err){
+    if(err){
+      res.respond(err, 500);
+    }else{
+      userWatcher.getDB().fetchAll(function(err, items){
+        res.respond(err||items, err ? 500 : 200);
+      });
+    }
   });
-
 };
 
 exports.GET_do_diff = function(req, res){
   var userWatcher = getCheckedSessionUserWatcher(req, res);
   if(!userWatcher) return;
 
-  userWatcher.on('ready', function(){
-    userWatcher.doDiff(function(err, diffReport){
-      if(err){
-        res.respond(err, 500);
-      }else{
-        res.respond(diffReport, 200);
-      }
-    });
+  userWatcher.doDiff(function(err, diffReport){
+    if(err){
+      res.respond(err, 500);
+    }else{
+      res.respond(diffReport, 200);
+    }
   });
-
 };
