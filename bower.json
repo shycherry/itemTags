@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "polymer": "latest",
-    "polymer-ajax": "polymer/polymer-ajax#latest"
+    "polymer-ajax": "polymer/polymer-ajax#latest",
+    "shy-elt-colorpicker": "shycherry/shy-elt-colorpicker#latest"
   }
 }
