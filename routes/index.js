@@ -110,13 +110,28 @@ exports.GET_fetch_all = function(req, res){
   var userWatcher = getCheckedSessionUserWatcher(req, res);
   if(!userWatcher) return;
 
+  userWatcher.getDB( function(err, database){
+    if(err){
+      res.respond(err, 500);
+    }else{
+      database.fetchAll(function(err, items){
+        res.respond(err||items, err ? 500 : 200);
+      });  
+    }
+  });
+
+};
+
+
+exports.GET_do_watch = function(req, res){
+  var userWatcher = getCheckedSessionUserWatcher(req, res);
+  if(!userWatcher) return;
+
   userWatcher.doWatch(function(err){
     if(err){
       res.respond(err, 500);
     }else{
-      userWatcher.getDB().fetchAll(function(err, items){
-        res.respond(err||items, err ? 500 : 200);
-      });
+      res.respond(null, 200);
     }
   });
 };
@@ -130,6 +145,19 @@ exports.GET_do_diff = function(req, res){
       res.respond(err, 500);
     }else{
       res.respond(diffReport, 200);
+    }
+  });
+};
+
+exports.GET_do_switch = function(req, res){
+  var userWatcher = getCheckedSessionUserWatcher(req, res);
+  if(!userWatcher) return;
+
+  userWatcher.doSwitch(function(err){
+    if(err){
+      res.respond(err, 500);
+    }else{
+      res.respond(null, 200);
     }
   });
 };

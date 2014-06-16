@@ -47,7 +47,9 @@ app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
 app.post('/login', routes.POSTlogin);
 app.get('/fetch_all', routes.GET_fetch_all); //todo rename
+app.get('/do_watch', routes.GET_do_watch);
 app.get('/do_diff', routes.GET_do_diff);
+app.get('/do_switch', routes.GET_do_switch);
 
 app.get('/users', user.list);
 
