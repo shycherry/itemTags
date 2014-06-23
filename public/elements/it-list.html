@@ -1,51 +1,90 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="it-loading.html" />
 
-<polymer-element name="it-list" attributes="databaseId method">
+<polymer-element name="it-list" attributes="databaseId guiFactoryId method">
   <template>
-    <it-loading loading?="{{!items.length}}">
-      <template repeat="{{ item in items }}">
-        <a href="{{ item['@file'].uri }}"><div title="{{ item.uuid }}">{{ item['@file'].uri }}</div></a>
+    <it-loading loading?="{{processing}}">
+      <template if="{{!error}}">
+        <content></content>
+      </template>
+      <template if="{{error}}">
+        Error occured : {{error}}
+      </template>
+      <template if="{{!items.length}}">
+        No items
       </template>
     </it-loading>
   </template>
 
   <script>
+
+    function refreshElements (iElements){
+      while(this.firstChild){
+        this.removeChild(this.firstChild);
+      }
+      for(var idxElt in iElements){
+        var currentElt = iElements[idxElt];
+        var guiElement = this._guiFactory.getGuiElement(currentElt);
+        this.appendChild(guiElement);  
+      }
+    }
+
     Polymer('it-list',{
       databaseId : '',
+      guiFactoryId : '',
       method : 'fetchAll',
       items: [],
       error: null,
+      processing: true,
+      
       ready: function(){
         var self = this;
-        var db = document.querySelector('#'+this.databaseId);
+        this._db = document.querySelector('#'+this.databaseId);
+        this._guiFactory = document.querySelector('#'+this.guiFactoryId);
 
         switch(this.method){
+          case 'fetchAllTags' :
+            this._db.fetchAllTags(function(err, tags){
+              if(err){
+                self.error = err;
+              }else{
+                self.items = tags;
+                refreshElements.call(self, self.items);
+              }
+              self.processing = false;
+            });
+          break;
           case 'fetchAll' :
-            db.fetchAll(function(err, items){
+            this._db.fetchAll(function(err, items){
               if(err){
                 self.error = err;
               }else{
                 self.items = items;
+                refreshElements.call(self, self.items);
               }
+              self.processing = false;
             });
           break;
           case 'removedItems' :
-            db.doDiff(function(err, diffReport){
+            this._db.doDiff(function(err, diffReport){
               if(err){
                 self.error = err;
               }else{
                 self.items = diffReport['removedItems'];
+                refreshElements.call(self, self.items);
               }
+              self.processing = false;
             });
           break;
           case 'addedItems' :
-            db.doDiff(function(err, diffReport){
+            this._db.doDiff(function(err, diffReport){
               if(err){
                 self.error = err;
               }else{
                 self.items = diffReport['addedItems'];
+                refreshElements.call(self, self.items);
               }
+              self.processing = false;
             });
           break;
         }

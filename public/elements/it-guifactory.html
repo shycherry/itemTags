@@ -1,0 +1,21 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="it-item.html">
+<link rel="import" href="it-tag.html">
+
+<polymer-element name="it-guifactory">
+  <script>
+    Polymer('it-guifactory',{
+      getGuiElement : function(iModel){
+        var guiElt = null;
+        if(iModel.hasOwnProperty('uuid')){
+          guiElt = document.createElement('it-item');
+          guiElt.setModel(iModel);
+        }else{
+          guiElt = document.createElement('it-tag');
+          guiElt.setModel(iModel);
+        }
+        return guiElt;
+      }
+    });
+  </script>
+</polymer-element>

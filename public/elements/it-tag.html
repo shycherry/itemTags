@@ -1,0 +1,16 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="it-tag">
+  <template>
+    <b>{{model}}</b>
+  </template>
+
+  <script>
+    Polymer('it-tag',{
+      model : '',
+      setModel : function(iModel){
+        this.model = iModel;
+      }
+    });
+  </script>
+</polymer-element>

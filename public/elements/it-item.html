@@ -1,0 +1,24 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="it-item">
+  <template>
+    <a href="{{ model['@file'].uri }}"><div title="{{ model.uuid }}">{{ model['@file'].uri }}</div></a>
+  </template>
+
+  <script>
+    Polymer('it-item',{
+      model : {},
+      ready : function(){
+        this.model = {};
+      },
+      setModel : function(iModel){
+        for(var idxModel in this.model){
+          delete this.model[idxModel];
+        }
+        for(var idxModel in iModel){
+          this.model[idxModel] = iModel[idxModel];
+        }
+      }
+    });
+  </script>
+</polymer-element>

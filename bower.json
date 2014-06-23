@@ -15,8 +15,7 @@
   ],
   "dependencies": {
     "polymer": "latest",
-    "polymer-ajax": "polymer/polymer-ajax#latest",
-    "shy-elt-colorpicker": "shycherry/shy-elt-colorpicker#latest"
+    "polymer-ajax": "polymer/polymer-ajax#latest"
   },
   "resolutions": {
     "polymer": ">=0.3.0 <1.0.0",

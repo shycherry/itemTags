@@ -11,6 +11,20 @@
   </template>
   
   <script>
+    function myGetAjaxHelper(iUrl, iCallback){
+      var myGetAjax = this.$.getAjax.cloneNode();
+        myGetAjax.url = this.databaseUrl+iUrl;
+
+        myGetAjax.addEventListener('polymer-response', function(e){
+          if(iCallback) iCallback(null, e.detail.response);
+        });
+        myGetAjax.addEventListener('polymer-error', function(e){
+          if(iCallback) iCallback(e.detail.response, null);
+        });
+
+        myGetAjax.go();
+    }
+
     Polymer('itdb-element',{
       databaseUrl: '/',
       configure: function(){
@@ -25,8 +39,8 @@
       fetchItemsSharingTags: function(){
 
       },
-      fetchAllTags: function(){
-
+      fetchAllTags: function(iCallback){
+        myGetAjaxHelper.call(this, 'fetch_all_tags', iCallback);
       },
       fetchAllByFilter: function(){
 
@@ -38,17 +52,7 @@
 
       },
       fetchAll: function(iCallback){
-        var myGetAjax = this.$.getAjax.cloneNode();
-        myGetAjax.url = this.databaseUrl+'fetch_all';
-
-        myGetAjax.addEventListener('polymer-response', function(e){
-          iCallback(null, e.detail.response);
-        });
-        myGetAjax.addEventListener('polymer-error', function(e){
-          iCallback(e.detail.response, null);
-        });
-
-        myGetAjax.go();
+        myGetAjaxHelper.call(this, 'fetch_all', iCallback);
       },      
       deleteOne: function(){
 
@@ -64,43 +68,13 @@
       },
       //todo to move
       doWatch: function(iCallback){
-        var myGetAjax = this.$.getAjax.cloneNode();
-        myGetAjax.url = this.databaseUrl+'do_watch';
-
-        myGetAjax.addEventListener('polymer-response', function(e){
-          iCallback(null, e.detail.response);
-        });
-        myGetAjax.addEventListener('polymer-error', function(e){
-          iCallback(e.detail.response, null);
-        });
-
-        myGetAjax.go();
+        myGetAjaxHelper.call(this, 'do_watch', iCallback);
       },
       doDiff: function(iCallback){
-        var myGetAjax = this.$.getAjax.cloneNode();
-        myGetAjax.url = this.databaseUrl+'do_diff';
-
-        myGetAjax.addEventListener('polymer-response', function(e){
-          iCallback(null, e.detail.response);
-        });
-        myGetAjax.addEventListener('polymer-error', function(e){
-          iCallback(e.detail.response, null);
-        });
-
-        myGetAjax.go();
+        myGetAjaxHelper.call(this, 'do_diff', iCallback);
       },
       doSwitch: function(iCallback){
-        var myGetAjax = this.$.getAjax.cloneNode();
-        myGetAjax.url = this.databaseUrl+'do_switch';
-
-        myGetAjax.addEventListener('polymer-response', function(e){
-          iCallback(null, e.detail.response);
-        });
-        myGetAjax.addEventListener('polymer-error', function(e){
-          iCallback(e.detail.response, null);
-        });
-
-        myGetAjax.go();
+        myGetAjaxHelper.call(this, 'do_switch', iCallback);
       },
       handleError: function(iEvent, iData){
         this.error = iData;

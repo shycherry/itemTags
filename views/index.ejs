@@ -5,9 +5,9 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />    
     <script src="platform/platform.js"></script>
     <script type="text/javascript" src="/js/controller.js"></script>
-    <link rel="import" href="shy-elt-colorpicker/shy-elt-colorpicker.html" />
     <link rel="import" href="elements/it-list.html" />
     <link rel="import" href="elements/itdb-element.html" />
+    <link rel="import" href="elements/it-guifactory.html" />
   </head>
   <body>
     <h1><%= title %></h1>
@@ -15,12 +15,15 @@
     <p>Last page was <%= lastPage %></p>
 
     <itdb-element id="db" databaseUrl="/"></itdb-element>
-    <shy-elt-colorpicker width="50"></shy-elt-colorpicker>
-    <it-list databaseId="db"></it-list>
+    <it-guifactory id="guiFactory"></it-guifactory>
+    <h2>All Indexed Tags</h2>
+    <it-list databaseId="db" guiFactoryId="guiFactory" method="fetchAllTags"></it-list>
+    <h2>All Indexed Items</h2>
+    <it-list databaseId="db" guiFactoryId="guiFactory" method="fetchAll"></it-list>
     <h2>Added Items</h2>
-    <it-list databaseId="db" method="addedItems"></it-list>
+    <it-list databaseId="db" guiFactoryId="guiFactory" method="addedItems"></it-list>
     <h2>Removed Items</h2>
-    <it-list databaseId="db" method="removedItems"></it-list>
+    <it-list databaseId="db" guiFactoryId="guiFactory" method="removedItems"></it-list>
 
   </body>
 </html>
