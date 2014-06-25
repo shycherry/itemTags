@@ -52,6 +52,8 @@ app.get('/do_watch', routes.GET_do_watch);
 app.get('/do_diff', routes.GET_do_diff);
 app.get('/do_switch', routes.GET_do_switch);
 
+app.post('/save', routes.POST_save);
+
 app.get('/users', user.list);
 
 var httpsServer = https.createServer(credentials, app);

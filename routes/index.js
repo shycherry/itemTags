@@ -177,3 +177,24 @@ exports.GET_do_switch = function(req, res){
     }
   });
 };
+
+exports.POST_save = function(req, res){
+  var userWatcher = getCheckedSessionUserWatcher(req, res);
+  if(!userWatcher) return;
+
+  if(!req.body){
+    res.respond('bad item to save', 422);
+    return;
+  }
+
+  userWatcher.getDB( function(err, database){
+    if(err){
+      res.respond(err, 500);
+    }else{
+      database.save(req.body, function(err, savedItem, created){
+        res.respond(err||savedItem, err ? 500 : 200);
+      });  
+    }
+  });
+
+};

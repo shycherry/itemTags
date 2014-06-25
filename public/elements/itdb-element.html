@@ -15,14 +15,34 @@
       var myGetAjax = this.$.getAjax.cloneNode();
         myGetAjax.url = this.databaseUrl+iUrl;
 
-        myGetAjax.addEventListener('polymer-response', function(e){
+        myGetAjax.addEventListener('polymer-response', function responseHandler(e){
           if(iCallback) iCallback(null, e.detail.response);
+          myGetAjax.removeEventListener('polymer-response', responseHandler);
         });
-        myGetAjax.addEventListener('polymer-error', function(e){
+        myGetAjax.addEventListener('polymer-error', function errorHandler(e){
           if(iCallback) iCallback(e.detail.response, null);
+          myGetAjax.removeEventListener('polymer-error', errorHandler);
         });
 
         myGetAjax.go();
+    }
+
+    function myPostAjaxHelper(iUrl, iData, iCallback){
+      var myPostAjax = this.$.postAjax.cloneNode();
+        myPostAjax.url = this.databaseUrl+iUrl;
+
+        myPostAjax.addEventListener('polymer-response', function responseHandler(e){
+          if(iCallback) iCallback(null, e.detail.response);
+          myGetAjax.removeEventListener('polymer-response', responseHandler);
+        });
+        myPostAjax.addEventListener('polymer-error', function errorHandler(e){
+          if(iCallback) iCallback(e.detail.response, null);
+          myGetAjax.removeEventListener('polymer-error', errorHandler);
+        });
+
+        myPostAjax.xhrArgs = {body: JSON.stringify(iData)};
+
+        myPostAjax.go();
     }
 
     Polymer('itdb-element',{
@@ -33,8 +53,8 @@
       dumpDb: function(){
 
       },
-      save: function(){
-
+      save: function(iItem, iCallback){
+        myPostAjaxHelper.call(this, 'save', iItem, iCallback);
       },
       fetchItemsSharingTags: function(){
 
@@ -75,14 +95,8 @@
       },
       doSwitch: function(iCallback){
         myGetAjaxHelper.call(this, 'do_switch', iCallback);
-      },
-      handleError: function(iEvent, iData){
-        this.error = iData;
-      },
-      handleResponse: function(iEvent, iData){
-        console.log(iData.response);
       }
-      
+            
     });
   </script>
 </polymer-element>
