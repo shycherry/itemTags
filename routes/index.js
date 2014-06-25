@@ -102,6 +102,32 @@ exports.POSTlogin = function(req, res){
   
 };
 
+exports.GET_fetch_user_watcher_config = function(req, res){
+  var sessionUser = getCheckedSessionUser(req, res);
+  if(!sessionUser) return;
+
+  var configDB = sessionUser.getTagValue('user')['watcherConfigDB'];
+  
+  var userWatcherConfigDB = require('itemTagsDB')({database: configDB});
+
+  var resultItems = [];
+  userWatcherConfigDB.fetchItemsSharingTags(['watchPath'], function(err, items){
+    if(err){
+      res.respond(err, 500);
+      return;
+    }
+    resultItems = resultItems.concat(items);
+    userWatcherConfigDB.fetchItemsSharingTags(['ftpConfig'], function(err, items){
+      if(err){
+        res.respond(err, 500);
+        return;
+      }
+      resultItems = resultItems.concat(items);
+      res.respond(resultItems, 200);
+    });
+  });
+}
+
 /*
  * GET fetchAll
  */

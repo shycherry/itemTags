@@ -43,16 +43,20 @@ app.use(expressSession({
   store: expressSession.MemoryStore({reapInterval : 60000*10})
 }));
 
+//service impl
 app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
 app.post('/login', routes.POSTlogin);
+app.get('/fetch_user_watcher_config', routes.GET_fetch_user_watcher_config);
+
+//itdb impl
 app.get('/fetch_all', routes.GET_fetch_all);
 app.get('/fetch_all_tags', routes.GET_fetch_all_tags);
 app.get('/do_watch', routes.GET_do_watch);
 app.get('/do_diff', routes.GET_do_diff);
 app.get('/do_switch', routes.GET_do_switch);
-
 app.post('/save', routes.POST_save);
+app.get('/do_switch', routes.GET_do_switch);
 
 app.get('/users', user.list);
 

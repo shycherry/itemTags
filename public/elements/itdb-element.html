@@ -86,7 +86,7 @@
       diffDb: function(){
 
       },
-      //todo to move
+      //todo to move to itdb-watcher-element
       doWatch: function(iCallback){
         myGetAjaxHelper.call(this, 'do_watch', iCallback);
       },
@@ -95,8 +95,12 @@
       },
       doSwitch: function(iCallback){
         myGetAjaxHelper.call(this, 'do_switch', iCallback);
+      },
+      //todo to move to itdb-service-element
+      fetchUserWatcherConfig: function(iCallback){
+        myGetAjaxHelper.call(this, 'fetch_user_watcher_config', iCallback);
       }
-            
+
     });
   </script>
 </polymer-element>
