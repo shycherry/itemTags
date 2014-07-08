@@ -2,7 +2,10 @@
 
 <polymer-element name="it-item">
   <template>
-    <a href="{{ model['@file'].uri }}"><div title="{{ model.uuid }}">{{ model['@file'].uri }}</div></a>
+  <div>
+    <a href="{{ model['@file'].uri }}">
+      <div title="{{ model.uuid }}">{{ model['@file'].uri }}</div>
+    </a>
   </template>
 
   <script>

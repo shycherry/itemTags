@@ -3,6 +3,9 @@ var usersDB = require('itemTagsDB')({database:'usersDB'});
 var sessionsUsersMap = {};
 
 var hashString = function(iString){
+  if(!iString)
+    return ""
+  
   var Crypto = require('crypto');
   var hash = Crypto.createHash('sha512');
   hash.update(iString);
