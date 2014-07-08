@@ -1,13 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../polymer-ajax/polymer-ajax.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
 
 <polymer-element name="itdb-element" attributes="databaseUrl">
   <template>
-    <polymer-ajax id="postAjax" method="POST" contentType="application/json" handleAs="json">
-    </polymer-ajax>
+    <core-ajax id="postAjax" method="POST" contentType="application/json" handleAs="json">
+    </core-ajax>
     
-    <polymer-ajax id="getAjax" method="GET" handleAs="json">
-    </polymer-ajax>
+    <core-ajax id="getAjax" method="GET" handleAs="json">
+    </core-ajax>
   </template>
   
   <script>
@@ -15,13 +15,13 @@
       var myGetAjax = this.$.getAjax.cloneNode();
         myGetAjax.url = this.databaseUrl+iUrl;
 
-        myGetAjax.addEventListener('polymer-response', function responseHandler(e){
+        myGetAjax.addEventListener('core-response', function responseHandler(e){
           if(iCallback) iCallback(null, e.detail.response);
-          myGetAjax.removeEventListener('polymer-response', responseHandler);
+          myGetAjax.removeEventListener('core-response', responseHandler);
         });
-        myGetAjax.addEventListener('polymer-error', function errorHandler(e){
+        myGetAjax.addEventListener('core-error', function errorHandler(e){
           if(iCallback) iCallback(e.detail.response, null);
-          myGetAjax.removeEventListener('polymer-error', errorHandler);
+          myGetAjax.removeEventListener('core-error', errorHandler);
         });
 
         myGetAjax.go();
@@ -31,13 +31,13 @@
       var myPostAjax = this.$.postAjax.cloneNode();
         myPostAjax.url = this.databaseUrl+iUrl;
 
-        myPostAjax.addEventListener('polymer-response', function responseHandler(e){
+        myPostAjax.addEventListener('core-response', function responseHandler(e){
           if(iCallback) iCallback(null, e.detail.response);
-          myGetAjax.removeEventListener('polymer-response', responseHandler);
+          myGetAjax.removeEventListener('core-response', responseHandler);
         });
-        myPostAjax.addEventListener('polymer-error', function errorHandler(e){
+        myPostAjax.addEventListener('core-error', function errorHandler(e){
           if(iCallback) iCallback(e.detail.response, null);
-          myGetAjax.removeEventListener('polymer-error', errorHandler);
+          myGetAjax.removeEventListener('core-error', errorHandler);
         });
 
         myPostAjax.xhrArgs = {body: JSON.stringify(iData)};
