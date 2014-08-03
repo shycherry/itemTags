@@ -17,10 +17,11 @@
     "polymer": "latest",
     "shy-elt-freewall": "shycherry/shy-elt-freewall#latest",
     "core-ajax": "Polymer/core-ajax#~0.3.3",
+    "core-list": "Polymer/core-list#~0.3.3",
     "paper-input": "Polymer/paper-input#~0.3.3",
     "paper-item": "Polymer/paper-item#~0.3.3"
   },
   "resolutions": {
-    "polymer": ">=0.3.0 <1.0.0"
+    "platform": "^0.3.3"
   }
 }

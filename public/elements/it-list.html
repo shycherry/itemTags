@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-list/core-list.html" />
 <link rel="import" href="it-loading.html" />
 
 <polymer-element name="it-list" attributes="databaseId guiFactoryId method">
@@ -37,7 +38,7 @@
       error: null,
       processing: true,
       
-      ready: function(){
+      domReady: function(){
         var self = this;
         this._db = document.querySelector('#'+this.databaseId);
         this._guiFactory = document.querySelector('#'+this.guiFactoryId);
