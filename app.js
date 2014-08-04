@@ -32,7 +32,10 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(favicon());
 app.use(logger('dev'));
-app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended:true
+}));
 app.use(methodOverride());
 //app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -40,7 +43,9 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(cookieParser());
 app.use(expressSession({
   secret: 'f82f07c0-854b-11e3-b7dd-6f7dbce5dff6',
-  store: expressSession.MemoryStore({reapInterval : 60000*10})
+  store: expressSession.MemoryStore({reapInterval : 60000*10}),
+  resave: true,
+  saveUninitialized: true
 }));
 
 //service impl
