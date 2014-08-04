@@ -1,11 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-item.html">
 
-<polymer-element name="it-item">
+<polymer-element name="it-item" attributes="model">
   <template>
-  <div>
-    <a href="{{ model['@file'].uri }}">
-      <div title="{{ model.uuid }}">{{ model['@file'].uri }}</div>
-    </a>
+    <paper-item>
+      <a href="{{ model['@file'].uri }}">
+        <div title="{{ model.uuid }}">{{ model['@file'].uri }}</div>
+      </a>
+    </paper-item>
   </template>
 
   <script>

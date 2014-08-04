@@ -2,28 +2,34 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />    
     <script src="platform/platform.js"></script>
-    <script type="text/javascript" src="/js/controller.js"></script>
-    <link rel="import" href="elements/it-list.html" />
-    <link rel="import" href="elements/itdb-element.html" />
-    <link rel="import" href="elements/it-guifactory.html" />
+    <script type="text/javascript" src="js/controller.js"></script>
+    <link rel="stylesheet" href="stylesheets/style.css"/>    
+    <link rel="import" href="elements/it-list.html"/>
+    <link rel="import" href="elements/itdb-element.html"/>
+    <link rel="import" href="elements/it-guifactory.html"/>
+    <link rel="import" href="core-header-panel/core-header-panel.html"/>    
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %>, <%= username %></p>
-    <p>Last page was <%= lastPage %></p>
+    <!-- <core-header-panel id="header" mode=​"waterfall-tall">​ -->
+      <!-- <div class=​"core-header animate tall">​waterfall-tall​</div>​ -->
+      <div class="content">
+        <h1><%= title %></h1>
+        <p>Welcome to <%= title %>, <%= username %></p>
+        <p>Last page was <%= lastPage %></p>
 
-    <itdb-element id="db" databaseUrl="/"></itdb-element>
-    <it-guifactory id="guiFactory"></it-guifactory>
-    <h2>All Indexed Tags</h2>
-    <it-list databaseId="db" guiFactoryId="guiFactory" method="fetchAllTags"></it-list>
-    <h2>All Indexed Items</h2>
-    <it-list databaseId="db" guiFactoryId="guiFactory" method="fetchAll"></it-list>
-    <h2>Added Items</h2>
-    <it-list databaseId="db" guiFactoryId="guiFactory" method="addedItems"></it-list>
-    <h2>Removed Items</h2>
-    <it-list databaseId="db" guiFactoryId="guiFactory" method="removedItems"></it-list>
+        <itdb-element id="db" databaseUrl="/"></itdb-element>
+        <it-guifactory id="guiFactory"></it-guifactory>
+        <h2>All Indexed Tags</h2>
+        <it-list databaseId="db" guiFactoryId="guiFactory" method="fetchAllTags"></it-list>
+        <h2>All Indexed Items</h2>
+        <it-list databaseId="db" guiFactoryId="guiFactory" method="fetchAll"></it-list>
+        <h2>Added Items</h2>
+        <it-list databaseId="db" guiFactoryId="guiFactory" method="addedItems"></it-list>
+        <h2>Removed Items</h2>
+        <it-list databaseId="db" guiFactoryId="guiFactory" method="removedItems"></it-list>
 
+      </div>
+    <!-- </core-header-panel> -->
   </body>
 </html>
