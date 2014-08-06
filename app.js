@@ -12,7 +12,7 @@ var express = require('express'),
   expressSession = require('express-session'),
   routes = require('./routes'),
   user = require('./routes/user'),
-  https = require('https'),
+  spdy = require('spdy'),
   fs = require('fs'),
   path = require('path');
 require('./response');
@@ -65,13 +65,13 @@ app.get('/do_switch', routes.GET_do_switch);
 
 app.get('/users', user.list);
 
-var httpsServer = https.createServer(credentials, app);
-httpsServer.listen(app.get('port'), function(){
+var spdyServer = spdy.createServer(credentials, app);
+spdyServer.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
 var wsServer = new WebSocketServer({
-  httpServer: httpsServer
+  httpServer: spdyServer
 });
 
 wsServer.on('request', function(request){
