@@ -25,6 +25,7 @@
     "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",
     "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master",
     "uuid": "latest",
-    "spdy": "latest"
+    "spdy": "latest",
+    "nodemailer": "latest"
   }  
 }
