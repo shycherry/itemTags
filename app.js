@@ -4,7 +4,7 @@
  */
 var WebSocketServer = require('websocket').server;
 var express = require('express'),
-  favicon = require('static-favicon'),
+  favicon = require('serve-favicon'),
   logger = require('morgan'),
   bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
@@ -23,14 +23,13 @@ var credentials = {
 };
 
 var wsClients = [];
-var db = exports.db = require('itemTagsDB')({database:'./itemTags.nosql'});
 var app = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.use(favicon());
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

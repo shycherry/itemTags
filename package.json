@@ -14,7 +14,7 @@
   "dependencies": {
     "websocket":"latest",
     "express": "latest",
-    "static-favicon": "latest",
+    "serve-favicon": "latest",
     "morgan" : "latest",
     "body-parser": "latest",
     "method-override": "latest",
