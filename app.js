@@ -64,6 +64,9 @@ app.get('/do_switch', routes.GET_do_switch);
 
 app.get('/users', user.list);
 
+//watch service
+require('./services/usersWatcher').start();
+
 var spdyServer = spdy.createServer(credentials, app);
 spdyServer.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
