@@ -20,5 +20,5 @@ http.ServerResponse.prototype.respond = function (content, status) {
     content = {"result":content};
   }
   // respond with JSON data
-  this.send(JSON.stringify(content)+"\n", status);
+  this.status(status).send(JSON.stringify(content)+"\n");
 };
