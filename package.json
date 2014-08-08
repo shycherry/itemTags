@@ -24,6 +24,7 @@
     "async": "latest",
     "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",
     "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master",
+    "itemTagsSniffer": "https://github.com/shycherry/itemTagsSniffer/tarball/master",
     "uuid": "latest",
     "spdy": "latest",
     "nodemailer": "latest"
