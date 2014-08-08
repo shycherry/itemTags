@@ -86,9 +86,9 @@
       diffDb: function(){
 
       },
-      //todo to move to itdb-watcher-element
-      doWatch: function(iCallback){
-        myGetAjaxHelper.call(this, 'do_watch', iCallback);
+      //todo to move to itdb-sniffer-element
+      doSniff: function(iCallback){
+        myGetAjaxHelper.call(this, 'do_sniff', iCallback);
       },
       doDiff: function(iCallback){
         myGetAjaxHelper.call(this, 'do_diff', iCallback);
@@ -97,8 +97,8 @@
         myGetAjaxHelper.call(this, 'do_switch', iCallback);
       },
       //todo to move to itdb-service-element
-      fetchUserWatcherConfig: function(iCallback){
-        myGetAjaxHelper.call(this, 'fetch_user_watcher_config', iCallback);
+      fetchUserSnifferConfig: function(iCallback){
+        myGetAjaxHelper.call(this, 'fetch_user_sniffer_config', iCallback);
       }
 
     });

@@ -48,6 +48,28 @@ var getCheckedSessionUserWatcher = function(req, res){
   return sessionUser.watcher;
 }
 
+var getCheckedSessionUserSniffer = function(req, res){
+  var sessionUser = getCheckedSessionUser(req, res);
+  if(!sessionUser) return null;
+
+  if(!sessionUser.sniffer){
+    var configDB = sessionUser.getTagValue('user')['snifferConfigDB'];
+    if(!configDB){
+      res.respond('bad snifferConfigDB', 500);
+      return null;
+    }
+
+    var userSniffer = require('itemTagsSniffer')({configDB: configDB});
+    if(!userSniffer){
+      res.respond('can\'t retrieve userSniffer', 500);
+      return null;
+    }    
+    sessionUser.sniffer = userSniffer;
+  }
+
+  return sessionUser.sniffer;
+}
+
 /*
  * GET home page.
  */
@@ -105,22 +127,22 @@ exports.POSTlogin = function(req, res){
   
 };
 
-exports.GET_fetch_user_watcher_config = function(req, res){
+exports.GET_fetch_user_sniffer_config = function(req, res){
   var sessionUser = getCheckedSessionUser(req, res);
   if(!sessionUser) return;
 
-  var configDB = sessionUser.getTagValue('user')['watcherConfigDB'];
+  var configDB = sessionUser.getTagValue('user')['snifferConfigDB'];
   
-  var userWatcherConfigDB = require('itemTagsDB')({database: configDB});
+  var userSnifferConfigDB = require('itemTagsDB')({database: configDB});
 
   var resultItems = [];
-  userWatcherConfigDB.fetchItemsSharingTags(['watchPath'], function(err, items){
+  userSnifferConfigDB.fetchItemsSharingTags(['sniffPath'], function(err, items){
     if(err){
       res.respond(err, 500);
       return;
     }
     resultItems = resultItems.concat(items);
-    userWatcherConfigDB.fetchItemsSharingTags(['ftpConfig'], function(err, items){
+    userSnifferConfigDB.fetchItemsSharingTags(['ftpConfig'], function(err, items){
       if(err){
         res.respond(err, 500);
         return;
@@ -136,10 +158,10 @@ exports.GET_fetch_user_watcher_config = function(req, res){
  */
 
 exports.GET_fetch_all = function(req, res){
-  var userWatcher = getCheckedSessionUserWatcher(req, res);
-  if(!userWatcher) return;
+  var userSniffer = getCheckedSessionUserSniffer(req, res);
+  if(!userSniffer) return;
 
-  userWatcher.getDB( function(err, database){
+  userSniffer.getDB( function(err, database){
     if(err){
       res.respond(err, 500);
     }else{
@@ -168,11 +190,11 @@ exports.GET_fetch_all_tags = function(req, res){
 };
 
 
-exports.GET_do_watch = function(req, res){
-  var userWatcher = getCheckedSessionUserWatcher(req, res);
-  if(!userWatcher) return;
+exports.GET_do_sniff = function(req, res){
+  var userSniffer = getCheckedSessionUserSniffer(req, res);
+  if(!userSniffer) return;
 
-  userWatcher.doWatch(function(err){
+  userSniffer.doSniff(function(err){
     if(err){
       res.respond(err, 500);
     }else{

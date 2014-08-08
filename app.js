@@ -51,12 +51,12 @@ app.use(expressSession({
 app.get('/', routes.index);
 app.get('/login', routes.GETlogin);
 app.post('/login', routes.POSTlogin);
-app.get('/fetch_user_watcher_config', routes.GET_fetch_user_watcher_config);
+app.get('/fetch_user_sniffer_config', routes.GET_fetch_user_sniffer_config);
 
 //itdb impl
 app.get('/fetch_all', routes.GET_fetch_all);
 app.get('/fetch_all_tags', routes.GET_fetch_all_tags);
-app.get('/do_watch', routes.GET_do_watch);
+app.get('/do_sniff', routes.GET_do_sniff);
 app.get('/do_diff', routes.GET_do_diff);
 app.get('/do_switch', routes.GET_do_switch);
 app.post('/save', routes.POST_save);
@@ -64,8 +64,8 @@ app.get('/do_switch', routes.GET_do_switch);
 
 app.get('/users', user.list);
 
-//watch service
-require('./services/usersWatcher').start();
+//sniff service
+require('./services/usersSniffer').start();
 
 var spdyServer = spdy.createServer(credentials, app);
 spdyServer.listen(app.get('port'), function(){
