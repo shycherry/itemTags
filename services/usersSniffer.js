@@ -10,7 +10,7 @@ exports.start = function(){
 
   intervalId = setInterval(function(){
     doRegularTask();
-  },1000);
+  },30000);
 
 }
 
@@ -30,24 +30,46 @@ var doRegularTask = function(){
       return;
     }
     for(iUser in items){
-      var userWatcherConfigDB = items[iUser].getTagValue('user')['watcherConfigDB'];
-      if(!userWatcherConfigDB){
-        console.log('Bad watcherConfigDB, skipping this user');
+      var userWatcherConfigDBName = items[iUser].getTagValue('user')['watcherConfigDB'];
+      if(!userWatcherConfigDBName){
+        console.log('Bad watcherConfigDB name, skipping this user');
         break;
       }
-      var userWatcher = require('itemTagsWatcher')({configDB: userWatcherConfigDB});
+
+      var userWatcher = require('itemTagsWatcher')({configDB: userWatcherConfigDBName});
       if(!userWatcher){
         console.log('Can\'t retrieve watcher, skipping this user');
         break;
       }
 
-      userWatcher.doDiff(function(err, diffReport){
+      var userSnifferConfigDBName = items[iUser].getTagValue('user')['snifferConfigDB'];
+      if(!userSnifferConfigDBName){
+        console.log('Bad snifferConfigDB name, skipping this user');
+        break;
+      }
+
+      var userSniffer = require('itemTagsSniffer')({configDB: userSnifferConfigDBName});
+      if(!userSniffer){
+        console.log('Can\'t retrieve sniffer, skipping this user');
+        break;
+      }
+
+      userSniffer.doSniff(function(err){
         if(err){
           console.log(err);
           return;
         }
-        console.log(diffReport);
+
+        userWatcher.doDiff(function(err, diffReport){
+          if(err){
+            console.log(err);
+            return;
+          }
+          console.log(diffReport);
+        });  
+
       });
+      
     }
     
   });

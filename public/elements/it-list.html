@@ -72,7 +72,9 @@
               if(err){
                 self.error = err;
               }else{
-                self.items = diffReport['removedItems'];
+                for(var forTagIdx in diffReport){
+                  self.items = self.items.concat(diffReport[forTagIdx]['removedItems']);
+                }
                 refreshElements.call(self, self.items);
               }
               self.processing = false;
@@ -83,7 +85,9 @@
               if(err){
                 self.error = err;
               }else{
-                self.items = diffReport['addedItems'];
+                for(var forTagIdx in diffReport){
+                  self.items = self.items.concat(diffReport[forTagIdx]['addedItems']);
+                }
                 refreshElements.call(self, self.items);
               }
               self.processing = false;
