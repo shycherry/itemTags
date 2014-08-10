@@ -27,6 +27,7 @@
     "itemTagsSniffer": "https://github.com/shycherry/itemTagsSniffer/tarball/master",
     "uuid": "latest",
     "spdy": "latest",
-    "nodemailer": "latest"
+    "nodemailer": "latest",
+    "nodemailer-smtp-pool": "latest"
   }  
 }

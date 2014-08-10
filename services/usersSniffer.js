@@ -1,6 +1,12 @@
+var serverDB = require('itemTagsDB')({database:'serverDB'});
 var usersDB = require('itemTagsDB')({database:'usersDB'});
-// var userWatcher = require('itemTagsWatcher')({configDB: configDB});
+var nodemailer = require('nodemailer');
+var nodemailer = require('nodemailer');
+var smtpPool = require('nodemailer-smtp-pool');
+var async = require('async');
+
 var intervalId = undefined;
+var emailTransporter = undefined;
 
 exports.start = function(){
   if(intervalId != undefined) {
@@ -8,9 +14,19 @@ exports.start = function(){
     return;
   }
 
-  intervalId = setInterval(function(){
-    doRegularTask();
-  },30000);
+  prepareMailer(function(err){
+    if(err){
+      console.log('failed to prepare emailer');
+      return;
+    }else{
+      console.log('emailer ready');
+    }
+
+    intervalId = setInterval(function(){
+      doRegularTask();
+    },30000);
+
+  });
 
 }
 
@@ -23,7 +39,20 @@ exports.stop = function(){
   clearInterval(intervalId);
 }
 
-var doRegularTask = function(){
+function prepareMailer(iCallback){
+  serverDB.fetchItemsSharingTags(['emailerConfig'], function(err, items){
+    if(err){
+      iCallback(err)
+    }else{
+      var options = items[0].getTagValue('emailerConfig');
+      emailTransporter = nodemailer.createTransport(smtpPool(options));
+      iCallback();
+    }
+  });
+}
+
+
+function doRegularTask(){
   usersDB.fetchItemsSharingTags(['user'], function(err, items){
     if(err){
       console.log(err);
@@ -54,21 +83,15 @@ var doRegularTask = function(){
         break;
       }
 
-      userSniffer.doSniff(function(err){
-        if(err){
-          console.log(err);
-          return;
+      async.series(
+        [
+          userSniffer.doSniff.bind(userSniffer),
+          userWatcher.doDiff.bind(userWatcher)
+        ],
+        function(err, results){
+          console.log(results);
         }
-
-        userWatcher.doDiff(function(err, diffReport){
-          if(err){
-            console.log(err);
-            return;
-          }
-          console.log(diffReport);
-        });  
-
-      });
+      )
       
     }
     
