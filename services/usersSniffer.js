@@ -7,6 +7,7 @@ var async = require('async');
 
 var intervalId = undefined;
 var emailTransporter = undefined;
+var usersSnifferConfig = {};
 
 exports.start = function(){
   if(intervalId != undefined) {
@@ -14,17 +15,27 @@ exports.start = function(){
     return;
   }
 
-  prepareMailer(function(err){
+  var taskQueue = async.queue(function(iTask, iCallback){
+    doRegularTask(iCallback);
+  },1);
+
+  taskQueue.drain = function(){
+    console.log('regular task done');
+  };
+
+  prepareService(function(err){
     if(err){
-      console.log('failed to prepare emailer');
+      console.log('failed to prepare notifiers');
       return;
     }else{
-      console.log('emailer ready');
+      console.log('notifiers ready');
     }
 
     intervalId = setInterval(function(){
-      doRegularTask();
-    },60000);
+      if(taskQueue.idle()){
+        taskQueue.push({});
+      }
+    },usersSnifferConfig.interval||60000);
 
   });
 
@@ -37,6 +48,27 @@ exports.stop = function(){
   }
 
   clearInterval(intervalId);
+}
+
+function loadUsersSnifferConfig(iCallback){
+  serverDB.fetchItemsSharingTags(['usersSnifferConfig'], function(err, items){
+    if(err){
+      iCallback(err)
+    }else{
+      usersSnifferConfig = items[0].getTagValue('usersSnifferConfig');
+      iCallback();
+    }
+  });
+}
+
+function prepareService(iCallback){
+  if(!iCallback)
+    iCallback = function(){};
+  
+  async.series([
+    loadUsersSnifferConfig,
+    prepareMailer
+    ], iCallback);
 }
 
 function prepareMailer(iCallback){
@@ -242,56 +274,81 @@ function transferContextForHandler(iDiffReport, iCallback){
   iCallback(null, iDiffReport, this);
 }
 
-function doRegularTask(){
+function doRegularTask(iCallback){
   usersDB.fetchItemsSharingTags(['user'], function(err, items){
     if(err){
-      console.log(err);
-      return;
-    }
-    for(iUser in items){
-      var userWatcherConfigDBName = items[iUser].getTagValue('user')['watcherConfigDB'];
-      if(!userWatcherConfigDBName){
-        console.log('Bad watcherConfigDB name, skipping this user');
-        break;
-      }
-
-      var userWatcher = require('itemTagsWatcher')({configDB: userWatcherConfigDBName});
-      if(!userWatcher){
-        console.log('Can\'t retrieve watcher, skipping this user');
-        break;
-      }
-
-      var userSnifferConfigDBName = items[iUser].getTagValue('user')['snifferConfigDB'];
-      if(!userSnifferConfigDBName){
-        console.log('Bad snifferConfigDB name, skipping this user');
-        break;
-      }
-
-      var userSniffer = require('itemTagsSniffer')({configDB: userSnifferConfigDBName});
-      if(!userSniffer){
-        console.log('Can\'t retrieve sniffer, skipping this user');
-        break;
-      }
-
-      var userWatcherConfigDB = require('itemTagsDB')({database:userWatcherConfigDBName});
-      async.waterfall(
-        [
-          userSniffer.doSniff.bind(userSniffer),
-          userWatcher.doDiff.bind(userWatcher),
-          transferContextForHandler.bind(userWatcherConfigDB),
-          function(iDiffReport, iWatcherConfigDB, iCallback){return handleDiffReport(iDiffReport, iWatcherConfigDB, iCallback);},
-          userWatcher.doSwitch.bind(userWatcher),
-        ],
-        function(err, result){
-          if(err){
-            console.log(err);            
-          }else{
-            console.log('handle OK')
-          }
-        }
-      );
+      iCallback(err);
+    }else{
       
+      var taskQueue = async.queue(function(iTask, iCallback){
+        async.waterfall(
+          [
+            iTask.userSniffer.doSniff.bind(iTask.userSniffer),
+            iTask.userWatcher.doDiff.bind(iTask.userWatcher),
+            transferContextForHandler.bind(iTask.userWatcherConfigDB),
+            function(iDiffReport, iWatcherConfigDB, iCallback){return handleDiffReport(iDiffReport, iWatcherConfigDB, iCallback);},
+            iTask.userWatcher.doSwitch.bind(iTask.userWatcher),
+          ],
+          function(err, result){
+            iCallback(err);
+          }
+        );
+      },1);
+
+      taskQueue.drain = iCallback;
+      
+      for(iUser in items){
+        var userWatcherConfigDBName = items[iUser].getTagValue('user')['watcherConfigDB'];
+        if(!userWatcherConfigDBName){
+          console.log('Bad watcherConfigDB name, skipping this user');
+          break;
+        }
+
+        var userWatcher = require('itemTagsWatcher')({configDB: userWatcherConfigDBName});
+        if(!userWatcher){
+          console.log('Can\'t retrieve watcher, skipping this user');
+          break;
+        }
+
+        var userSnifferConfigDBName = items[iUser].getTagValue('user')['snifferConfigDB'];
+        if(!userSnifferConfigDBName){
+          console.log('Bad snifferConfigDB name, skipping this user');
+          break;
+        }
+
+        var userSniffer = require('itemTagsSniffer')({configDB: userSnifferConfigDBName});
+        if(!userSniffer){
+          console.log('Can\'t retrieve sniffer, skipping this user');
+          break;
+        }
+
+        var userWatcherConfigDB = require('itemTagsDB')({database:userWatcherConfigDBName});
+
+        taskQueue.push({
+          "userSniffer": userSniffer,
+          "userWatcher": userWatcher,
+          "userWatcherConfigDB": userWatcherConfigDB,
+        });
+
+        // async.waterfall(
+        //   [
+        //     userSniffer.doSniff.bind(userSniffer),
+        //     userWatcher.doDiff.bind(userWatcher),
+        //     transferContextForHandler.bind(userWatcherConfigDB),
+        //     function(iDiffReport, iWatcherConfigDB, iCallback){return handleDiffReport(iDiffReport, iWatcherConfigDB, iCallback);},
+        //     userWatcher.doSwitch.bind(userWatcher),
+        //   ],
+        //   function(err, result){
+        //     if(err){
+        //       console.log(err);            
+        //     }else{
+        //       console.log('handle OK')
+        //     }
+        //   }
+        // );
+      }
+      if(taskQueue.idle())
+        iCallback();
     }
-    
   });
 }
