@@ -293,7 +293,7 @@ function doRegularTask(iCallback){
             iCallback(err);
           }
         );
-      },1);
+      },2);
 
       taskQueue.drain = iCallback;
       
