@@ -65,7 +65,7 @@ app.get('/do_switch', routes.GET_do_switch);
 app.get('/users', user.list);
 
 //sniff service
-require('./services/usersSniffer').start();
+// require('./services/usersSniffer').start();
 
 var spdyServer = spdy.createServer(credentials, app);
 spdyServer.listen(app.get('port'), function(){

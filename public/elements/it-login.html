@@ -1,15 +1,31 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
 <polymer-element name="it-login" attributes="url">
   <template>
-    <form action="{{url}}" method="post">
-      <input type="text" name="login"/>
-      <input type="password" name="password"/>
-      <input type="submit" value="login"/>
-    </form>
+  
+    <core-ajax id="postAjax" contentType="application/json" url="{{url}}" on-core-response="{{onResponse}}" method="post" handleAs="document"></core-ajax>
+    <paper-input id="inputLogin" floatingLabel label="User" type="text" name="login" value="{{body.login}}"></paper-input><br/>
+    <paper-input id="inputPass" floatingLabel label="Password" type="password" name="password" value="{{body.password}}"></paper-input><br/>
+    <paper-button id="logBtn" raisedButton label="Login" on-tap="{{doSend}}"></paper-button>
+
+    <template repeat="{{response}}">truc {{data}}</template>
+  
   </template>
   <script>
     Polymer('it-login',{
-      url: '/login'
+      url: '/login',
+      created : function(){
+        this.body = {};
+      },
+      doSend: function(){
+        this.$.postAjax.body = JSON.stringify(this.body);
+        this.$.postAjax.go();
+      },
+      onResponse: function(data){
+        window.location.replace(data.redirect);
+      }
     });
   </script>
 </polymer-element>
