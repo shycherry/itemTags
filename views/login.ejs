@@ -6,10 +6,26 @@
     <script src="platform/platform.js"></script>
     <script type="text/javascript" src="/js/controller.js"></script>
     <link rel='import' href='elements/it-login.html' />
+    <link rel='import' href='paper-toast/paper-toast.html' />
+    <script type="text/javascript">
+      window.addEventListener('polymer-ready', function(e){
+        var login = document.querySelector('it-login');
+        var toast = document.querySelector('paper-toast');
+        login.addEventListener('core-response', function(e){
+          if(e.detail.response.login == 'ok'){
+            toast.text = "Login OK !";
+            toast.show();
+            window.location.replace(e.detail.response.url);
+          }else{
+            toast.text = "Bad login !";
+            toast.show();
+          }
+        });
+      });
+    </script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Login to <%= title %></p>    
     <it-login></it-login>
+    <paper-toast></paper-toast>
   </body>
 </html>

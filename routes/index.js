@@ -115,13 +115,18 @@ exports.POSTlogin = function(req, res){
   
   usersDB.fetchOneByFilter(_userFilter(login, hashedPasswd), function(err, user){
     if(err){
-      res.render('login', { title: 'Error'});
+      res.respond({
+        login:"ko"
+      },200);
     }else{
       var UUID = require('uuid');
       var sid = UUID.v1();
       sessionsUsersMap[sid] = user;
       req.session.sid = sid;
-      res.redirect(req.session.lastPage || '/');
+      res.respond({
+        "login":"ok",
+        "url":req.session.lastPage || '/'
+      }, 200);
     }
   });
   

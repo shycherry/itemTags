@@ -5,7 +5,7 @@
 <polymer-element name="it-login" attributes="url">
   <template>
   
-    <core-ajax id="postAjax" contentType="application/json" url="{{url}}" on-core-response="{{onResponse}}" method="post" handleAs="document"></core-ajax>
+    <core-ajax id="postAjax" contentType="application/json" url="{{url}}" method="post" handleAs="json"></core-ajax>
     <paper-input id="inputLogin" floatingLabel label="User" type="text" name="login" value="{{body.login}}"></paper-input><br/>
     <paper-input id="inputPass" floatingLabel label="Password" type="password" name="password" value="{{body.password}}"></paper-input><br/>
     <paper-button id="logBtn" raisedButton label="Login" on-tap="{{doSend}}"></paper-button>
@@ -22,10 +22,11 @@
       doSend: function(){
         this.$.postAjax.body = JSON.stringify(this.body);
         this.$.postAjax.go();
-      },
-      onResponse: function(data){
-        window.location.replace(data.redirect);
       }
+      // ,
+      // onResponse: function(data){
+      //   window.location.replace(data.detail.response.result);
+      // }
     });
   </script>
 </polymer-element>
