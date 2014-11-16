@@ -12,23 +12,23 @@
     "postinstall": "node_modules/.bin/bower install"
   },
   "dependencies": {
-    "websocket": "latest",
-    "express": "latest",
-    "serve-favicon": "latest",
-    "morgan": "latest",
-    "body-parser": "latest",
-    "method-override": "latest",
-    "cookie-parser": "latest",
-    "express-session": "latest",
-    "ejs": "latest",
     "async": "latest",
+    "body-parser": "latest",
+    "cookie-parser": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "express-session": "latest",
     "itemTagsDB": "https://github.com/shycherry/itemTagsDB/tarball/master",
-    "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master",
     "itemTagsSniffer": "https://github.com/shycherry/itemTagsSniffer/tarball/master",
-    "uuid": "latest",
-    "spdy": "latest",
+    "itemTagsWatcher": "https://github.com/shycherry/itemTagsWatcher/tarball/master",
+    "method-override": "latest",
+    "morgan": "latest",
     "nodemailer": "latest",
-    "nodemailer-smtp-pool": "latest"
+    "nodemailer-smtp-pool": "latest",
+    "serve-favicon": "latest",
+    "spdy": "latest",
+    "uuid": "^2.0.1",
+    "websocket": "latest"
   },
   "devDependencies": {
     "bower": "^1.3.12"

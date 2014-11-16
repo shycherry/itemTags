@@ -8,7 +8,7 @@
     <core-ajax id="postAjax" contentType="application/json" url="{{url}}" method="post" handleAs="json"></core-ajax>
     <paper-input id="inputLogin" floatingLabel label="User" type="text" name="login" value="{{body.login}}"></paper-input><br/>
     <paper-input id="inputPass" floatingLabel label="Password" type="password" name="password" value="{{body.password}}"></paper-input><br/>
-    <paper-button id="logBtn" raisedButton label="Login" on-tap="{{doSend}}"></paper-button>
+    <paper-button id="logBtn" raised on-tap="{{doSend}}">Login</paper-button>
 
     <template repeat="{{response}}">truc {{data}}</template>
   
